@@ -12,6 +12,7 @@ import android.util.LogPrinter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,8 +30,10 @@ import java.util.jar.Manifest;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
+    private Button button;
     String[] Countries = new String[]{"India", "Australia", "Newzealand",
             "Indonesia", "China", "Russia", "Japan", "South Korea"};
+    private MediaPlayer mediaPlayer ;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -42,7 +45,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 255);
+
+        mediaPlayer = new  android.media.MediaPlayer();
         mListView = (ListView) findViewById(R.id.list_view);
+        button = (Button) findViewById(R.id.button2);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaPlayer.pause();
+            }
+        });
         Log.d("S", Environment.getExternalStorageDirectory().toString());
         File rootFolder = Environment.getExternalStorageDirectory();
 //        File downloads=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -62,14 +74,21 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                Toast.makeText(MainActivity.this, Countries[i], Toast.LENGTH_SHORT).show();
 //                String filePath = Environment.getExternalStorageDirectory()+"/yourfolderNAme/yopurfile.mp3";
-                MediaPlayer mediaPlayer = new  android.media.MediaPlayer();
-                try {
-                    mediaPlayer.setDataSource(theNamesOfFiles[i]);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
+                if (! mediaPlayer.isPlaying())
+                {
+                    try {
+                        mediaPlayer.reset();
+                        mediaPlayer.setDataSource(theNamesOfFiles[i]);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    }
+                    catch (IOException e){
+                        Log.d("IO",e.toString());
+                    }
                 }
-                catch (IOException e){
-                    Log.d("IO",e.toString());
+                else
+                {
+                    Log.d("P ","Playing ");
                 }
             }
         });

@@ -61,14 +61,17 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("S", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
         List<File> allFiles = getListFiles(rootFolder);
         final String[] theNamesOfFiles = new String[allFiles.size()];
+        final String[] thePathsOfFiles = new String[allFiles.size()];
 
         for (int i=0;i<allFiles.size();i++)
         {
+            thePathsOfFiles[i]=allFiles.get(i).getName();
             theNamesOfFiles[i]=allFiles.get(i).getPath();
         }
-        ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, theNamesOfFiles);
+//        ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, theNamesOfFiles);
 //        ArrayAdapter<String> countryAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Countries);
-        mListView.setAdapter(countryAdapter);
+        CustomList adapter = new CustomList(MainActivity.this, thePathsOfFiles,theNamesOfFiles);
+        mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
